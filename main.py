@@ -1,13 +1,12 @@
-from termcolor import colored,cprint
+from termcolor import colored, cprint
 from spy_details import spy, Spy, ChatMessage, friends
 from steganography.steganography import Steganography
-from datetime import datetime
 
 STATUS_MESSAGES = ['My name is Bond, James Bond', 'Shaken, not stirred.', 'Keeping the British end up, Sir']
 
 
 print "Hello! Let\'s start with it"
-#Asking the user to start with given user
+# Asking the user to start with given user
 question = "Do you want to continue as " + spy.salutation + " " + spy.name + " (Y/N)? "
 existing = raw_input(question)
 
@@ -17,16 +16,15 @@ def add_status():
     updated_status_message = None
 
     if spy.current_status_message != None:
-#current status message
-        print 'Your current status message is %s \n' % (spy.current_status_message)
+        # current status message
+        print 'Your current status message is %s \n' % spy.current_status_message
     else:
-        cprint('Sorry,you don\'t have any status message currently \n',"red")
+        cprint('Sorry,you don\'t have any status message currently \n', "red")
 
     default = raw_input("Do you want to select from the older status (y/n)? ")
 
     if default.upper() == "N":
         new_status_message = raw_input(colored("What status message do you want to set? ","green"))
-
 
         if len(new_status_message) > 0:
             STATUS_MESSAGES.append(new_status_message)
@@ -39,9 +37,8 @@ def add_status():
         for message in STATUS_MESSAGES:
             print '%d. %s' % (item_position, message)
             item_position = item_position + 1
-#asking the user to cnoose from inbuilt statuses
+# asking the user to choose from inbuilt statuses
         message_selection = int(raw_input("\nChoose from the above messages "))
-
 
         if len(STATUS_MESSAGES) >= message_selection:
             updated_status_message = STATUS_MESSAGES[message_selection - 1]
@@ -50,7 +47,7 @@ def add_status():
         print 'The option you chose is invalid! Press y or n.'
 
     if updated_status_message:
-        cprint('Your updated status message is: %s' % (updated_status_message),"green")
+        cprint('Your updated status message is: %s' % updated_status_message, "green")
     else:
         cprint('Oops! You don\'t have a status update',"yellow")
 
@@ -59,8 +56,8 @@ def add_status():
 
 def add_friend():
 
-    friend = Spy('','',0,0.0)
-#taking detials of the user
+    friend = Spy('', '', 0, 0.0)
+# taking details of the user
     friend.name = raw_input("Please add your friend's name: ")
     friend.salutation = raw_input("Are they Mr. or Ms.?: ")
 
@@ -85,7 +82,7 @@ def select_a_friend():
     item_number = 0
 
     for friend in friends:
-        print '%d. %s %s aged %d with rating %.2f is online' % (item_number +1, friend.salutation, friend.name,
+        print '%d. %s %s aged %d with rating %.2f is online' % (item_number + 1, friend.salutation, friend.name,
                                                    friend.age,
                                                    friend.rating)
         item_number = item_number + 1
@@ -100,13 +97,13 @@ def select_a_friend():
 def send_message():
 
     friend_choice = select_a_friend()
-#using steganography encoding the data to then image
+# using steganography encoding the data to then image
     original_image = raw_input("What is the name of the image?")
     output_path = "output.jpg"
     text = raw_input("What do you want to say? ")
     Steganography.encode(original_image, output_path, text)
 
-    new_chat = ChatMessage(text,True)
+    new_chat = ChatMessage(text, True)
 
     friends[friend_choice].chats.append(new_chat)
 
@@ -117,18 +114,18 @@ def read_message():
 
     sender = select_a_friend()
 
-    output_path = raw_input(colored("What is the name of the file?","yellow"))
+    output_path = raw_input(colored("What is the name of the file?", "yellow"))
 
     secret_text = Steganography.decode(output_path)
 
     def verify_message(self, message, friend_id):
-#conditioning and removing the friend if length of the mnessage is abobe 100 letters
+        # conditioning and removing the friend if length of the message is above 100 letters
         if len(message) > 100:
             print "Your Friend %s %s is removed due to spamming" % (
-            self.spy.friends[friend_id].salutation, self.spy.friends[friend_id].name)
+             self.spy.friends[friend_id].salutation, self.spy.friends[friend_id].name)
             self.spy.friends.pop(friend_id)
             return False
-#special messages with their definitions
+# special messages with their definitions
         elif message == "SOS":
             print "Save Our Ship"
         elif message == "SAVE ME":
@@ -137,7 +134,7 @@ def read_message():
             print "I need Help as soon as possible"
         return True
 
-    new_chat = ChatMessage(secret_text,False)
+    new_chat = ChatMessage(secret_text, False)
 
     friends[sender].chats.append(new_chat)
 
@@ -161,17 +158,21 @@ def start_chat(spy):
 
     spy.name = spy.salutation + " " + spy.name
 
-
-    if spy.age > 12 and spy.age < 50:
-
+    if spy.age > 12 and spy.name < 50:
 
         print "Authentication complete. Welcome " + spy.name + " age: " \
               + str(spy.age) + " and rating of: " + str(spy.rating) + " Proud to have you onboard"
 
         show_menu = True
-#asking user to take perform a action from given functions
+# asking user to take perform a action from given functions
         while show_menu:
-            menu_choices = "What do you want to do? \n 1. Add a status update \n 2. Add a friend \n 3. Send a secret message \n 4. Read a secret message \n 5. Read Chats from a user \n 6. Close Application \n"
+            menu_choices = "What do you want to do? \n " \
+                           "1. Add a status update \n " \
+                           "2. Add a friend \n " \
+                           "3. Send a secret message \n " \
+                           "4. Read a secret message \n " \
+                           "5. Read Chats from a user \n " \
+                           "6. Close Application \n"
             menu_choice = raw_input(menu_choices)
 
             if len(menu_choice) > 0:
@@ -181,7 +182,7 @@ def start_chat(spy):
                     spy.current_status_message = add_status()
                 elif menu_choice == 2:
                     number_of_friends = add_friend()
-                    print 'You have %d friends' % (number_of_friends)
+                    print 'You have %d friends' % number_of_friends
                 elif menu_choice == 3:
                     send_message()
                 elif menu_choice == 4:
@@ -197,8 +198,7 @@ if existing == "Y":
     start_chat(spy)
 else:
 
-    spy = Spy('','',0,0.0)
-
+    spy = Spy('', '', 0, 0.0)
 
     spy.name = raw_input("Welcome to spy chat, you must tell me your spy name first: ")
 
