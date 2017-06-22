@@ -98,11 +98,14 @@ def send_message():
 
     friend_choice = select_a_friend()
 # using steganography encoding the data to then image
+
     original_image = raw_input("What is the name of the image?")
+
     output_path = "output.jpg"
     text = raw_input("What do you want to say? ")
-    Steganography.encode(original_image, output_path, text)
-
+    try:
+        Steganography.encode(original_image, output_path, text)
+    except:cprint("Wrong file chosen!", "red")
     new_chat = ChatMessage(text, True)
 
     friends[friend_choice].chats.append(new_chat)
@@ -158,13 +161,13 @@ def start_chat(spy):
 
     spy.name = spy.salutation + " " + spy.name
 
-    if spy.age > 12 and spy.name < 50:
+    if spy.age > 12 and spy.age < 50:
 
         print "Authentication complete. Welcome " + spy.name + " age: " \
               + str(spy.age) + " and rating of: " + str(spy.rating) + " Proud to have you onboard"
 
         show_menu = True
-# asking user to take perform a action from given functions
+        # asking user to take perform a action from given functions
         while show_menu:
             menu_choices = "What do you want to do? \n " \
                            "1. Add a status update \n " \
@@ -173,10 +176,12 @@ def start_chat(spy):
                            "4. Read a secret message \n " \
                            "5. Read Chats from a user \n " \
                            "6. Close Application \n"
-            menu_choice = raw_input(menu_choices)
-
+            try:
+                menu_choice = int(raw_input(menu_choices))
+            except:
+                cprint("incorrect input", "red")
+                start_chat(spy)
             if len(menu_choice) > 0:
-                menu_choice = int(menu_choice)
 
                 if menu_choice == 1:
                     spy.current_status_message = add_status()
@@ -194,7 +199,7 @@ def start_chat(spy):
     else:
         print 'Sorry you are not of the correct age to be a spy'
 
-if existing == "Y":
+if existing == "Y" or existing== "y":
     start_chat(spy)
 else:
 
